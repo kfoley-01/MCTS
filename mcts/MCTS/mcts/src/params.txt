@@ -1,0 +1,32 @@
+# Start with '#' for a comment.
+### Execution:
+n_experiments = 100
+is_random = false
+n_randomMapCities = 10
+max_num_ticks = 1000
+map_name = map-10-2
+
+### Tree
+# Possibilities: random, improve, improveRelative
+selection_mc_policy = improveRelative
+
+# Possibilities: random, ucb, ucb1
+selection_tree_policy = ucb1
+ucb_k_value = 0.25
+
+# Possibilities: simple, simpleDiag, simpleMult, mult, all
+action_set = simple
+action_num_repetitions = 5
+discard_tree = true
+max_depth = 50
+num_simulations = 400
+time_limited = false
+limit_time_ms = 5
+
+### Fitness
+pen_distance = true
+pen_distance_min = 50
+pen_distance_max = 5000
+pen_time = false
+pen_time_max = 10000
+max_fitness = 10000

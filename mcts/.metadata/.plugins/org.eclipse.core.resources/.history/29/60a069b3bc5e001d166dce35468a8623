@@ -1,0 +1,95 @@
+package games.tictactoe;
+
+import java.util.Arrays;
+import java.util.Random;
+import utils.SavingInFile;
+
+public class Main  {
+	
+	static Random rnd = new Random();
+	final static int PLAYER1 = Constants.MCTS; //Constants.CPU;
+	 static int wins = 0;
+	 static int draws = 0;
+	 static int loss = 0;
+	 static int totalGames = 1,
+	            trails_C = 1;
+	
+	static double minValueC = 0.0,
+				  maxValueC = 2.0;
+	
+	static  SavingInFile sFile;
+	
+	public Main(){}
+	
+	public static void main (String [] args) throws Exception{
+		//double maxValueC = 3.0;
+		double interval = maxValueC / trails_C;
+		//double minValueC = 0.0;
+		String fName = "data_";
+		System.out.println("Starting the game!!!");
+		//sFile = new SavingInFile();
+		for (int j = 0; j < trails_C; j ++){
+			
+			minValueC += interval;
+			wins = 0; draws = 0; loss = 0;
+			fName += "trail" + minValueC + ".dat";
+			sFile = new SavingInFile(fName);
+			sFile.saveString("%Game  \t Remaining Moves");
+			for (int i = 0; i < totalGames; i++){
+				rnd.setSeed(i);				
+				TicTacToeController ticTacToe = new MCTSTicTacToe(rnd, minValueC);
+				run(ticTacToe, i);
+			}
+		}
+		sFile.close_files();
+		/*System.out.println("Number of won games: " + wins + " / " + totalGames);
+		System.out.println("Number of draw games: " + draws + " / " + totalGames);
+		System.out.println("Number of lost games: " + loss + " / " + totalGames);*/
+		//MCTSTicTacToe ticTacToe = new MCTSTicTacToe();
+	}
+	
+	public static void run(TicTacToeController ticTacToe, int i) throws Exception{
+		GameState gs = new GameState(true);
+		Game game = new Game(gs, ticTacToe, PLAYER1, sFile);
+		game.run(rnd, i);
+		String result = Arrays.toString(gs.getOutcomes());
+		if (PLAYER1 == Constants.CPU){
+		if (result.contains(", WIN]")){//we won
+			wins++;
+		}else if (result.contains("[DRAW,")){
+			draws++;
+		}else if (result.contains("[WIN,")){
+			loss++;
+			System.out.println("Game (" + i + ") lost ");
+			System.exit(0);
+		}
+		}else if (PLAYER1 == Constants.MCTS){
+			if (result.contains("[WIN,")){//we won
+				wins++;
+			}else if (result.contains("[DRAW,")){
+				draws++;
+			}else if (result.contains("[LOSS,")){
+				loss++;
+				System.out.println("Game (" + i + ") lost ");
+				//System.exit(0);
+			}
+		}
+		System.out.println(gs.gameToString());
+		//System.out.println(Arrays.toString(gs.getOutcomes()));
+		//if (i == totalGames-1)
+		{
+			if (loss == 0){
+				System.out.println("Game("+i+") ***WON ALL GAMES!*** C("+minValueC+") Won: " + wins + " Loss: " + loss + " Draw: "+ draws + " totalGames("+ totalGames+")");
+			}else{
+				System.out.println("C("+minValueC+") Won: " + wins + " Loss: " + loss + " Draw: "+ draws + " totalGames("+ totalGames+")");
+			}
+		}
+		//System.out.println("Number of won games: " + wins + " / " + totalGames);
+		//System.out.println("Number of draw games: " + draws + " / " + totalGames);
+		//System.out.println("Number of lost games: " + loss + " / " + totalGames);
+	}
+
+	
+	
+	
+}

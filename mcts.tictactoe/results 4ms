@@ -1,0 +1,10 @@
+Mcts won : 1973
+ Lost : 0
+ Drew : 27 when playing as 1
+Win percentage is : 0.9865
+with average iterations of 2.96819220095E7
+Mcts won : 538
+ Lost : 1
+ Drew : 41 when playing as 2
+Win percentage is : 0.269
+with average iterations of 1.22919787415E7
